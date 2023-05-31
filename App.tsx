@@ -1,74 +1,65 @@
 import React, { useState } from "react";
 import {
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import useBLE from "./useBLE";
+// import useBLE from "./useBLE";
 import { PulseIndicator } from "./PulseIndicator";
 import DeviceModal from "./DeviceConnectionModal";
+import NotConnectedView from "./NotConnectedView";
+import ConnectedView from "./ConnectedView";
 
 const App = () => {
-  const {
-    requestPermissions,
-    scanForPeripherals,
-    allDevices,
-    connectToDevice,
-    connectedDevice,
-    heartRate,
-    disconnectFromDevice,
-  } = useBLE();
+  // const {
+  //   requestPermissions,
+  //   scanForPeripherals,
+  //   allDevices,
+  //   connectToDevice,
+  //   connectedDevice,
+  //   heartRate,
+  //   disconnectFromDevice,
+  // } = useBLE();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const scanForDevices = async () => {
-    const isPermissionsEnabled = await requestPermissions();
-    if (isPermissionsEnabled) {
-      scanForPeripherals();
-    }
-  };
+  // const scanForDevices = async () => {
+  //   const isPermissionsEnabled = await requestPermissions();
+  //   if (isPermissionsEnabled) {
+  //     scanForPeripherals();
+  //   }
+  // };
 
   const hideModal = () => {
     setIsModalVisible(false);
   };
 
   const openModal = async () => {
-    scanForDevices();
+    // await scanForDevices();
     setIsModalVisible(true);
   };
 
-  console.log("allDevices", allDevices);
+  // console.log("allDevices", allDevices);
+
+  const connectedDevice = true;
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.heartRateTitleWrapper}>
+      <ScrollView style={{ flex: 1 }}>
         {connectedDevice ? (
-          <>
-            <PulseIndicator />
-            <Text style={styles.heartRateTitleText}>Your Heart Rate Is:</Text>
-            <Text style={styles.heartRateText}>{heartRate} bpm</Text>
-          </>
+          <ConnectedView openModal={openModal} />
         ) : (
-          <Text style={styles.heartRateTitleText}>
-            Please Connect to a Heart Rate Monitor
-          </Text>
+          <NotConnectedView openModal={openModal} />
         )}
-      </View>
-      <TouchableOpacity
-        onPress={connectedDevice ? disconnectFromDevice : openModal}
-        style={styles.ctaButton}
-      >
-        <Text style={styles.ctaButtonText}>
-          {connectedDevice ? "Disconnect" : "Connect"}
-        </Text>
-      </TouchableOpacity>
-      <DeviceModal
+      </ScrollView>
+      {/* <DeviceModal
         closeModal={hideModal}
         visible={isModalVisible}
         connectToPeripheral={connectToDevice}
         devices={allDevices}
-      />
+      /> */}
     </SafeAreaView>
   );
 };
@@ -77,11 +68,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f2f2f2",
-  },
-  heartRateTitleWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   heartRateTitleText: {
     fontSize: 30,
@@ -99,6 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 50,
+    width: "90%",
     marginHorizontal: 20,
     marginBottom: 5,
     borderRadius: 8,

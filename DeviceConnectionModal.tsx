@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import base64 from "react-native-base64";
 import { Device } from "react-native-ble-plx";
 
 type DeviceModalListItemProps = {
@@ -37,6 +38,9 @@ const DeviceModalListItem: FC<DeviceModalListItemProps> = (props) => {
       style={modalStyle.ctaButton}
     >
       <Text style={modalStyle.ctaButtonText}>{item.item.name}</Text>
+      <Text>{`Manufacturer : ${base64.decode(
+        item?.item?.manufacturerData?.replace(/[=]/g, "") || ""
+      )}`}</Text>
     </TouchableOpacity>
   );
 };
